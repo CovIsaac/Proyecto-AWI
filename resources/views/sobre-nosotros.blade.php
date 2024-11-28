@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Destilado Agave - Bienvenidos</title>
+    <title>Destilado Agave - Sobre Nosotros</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -50,11 +50,27 @@
     </header>
     <main class="container my-5 flex-grow-1">
         <div class="row">
-            <section class="col-md-6 offset-md-3 text-center">
-                <h2>Bienvenidos</h2>
-                <img src="{{ asset('images/Ferecha.jpeg') }}" alt="Imagen de mezcal" class="img-fluid my-4">
-                <p>Descubre el sabor auténtico y tradicional del mezcal de la más alta calidad. En "Destilado Agave", nos enorgullece ofrecerte una experiencia única que celebra la riqueza de nuestra herencia cultural. Cada botella es una obra de arte, destilada con pasión y dedicación.</p>
-            </section>
+            <div class="col-md-12">
+                <h2>Sobre Nosotros</h2>
+                <p>La historia del mezcal es tan rica y profunda como los sabores que encierra. Originario de México, el mezcal es una bebida ancestral que ha sido disfrutada durante siglos. Cada sorbo cuenta una historia de tradición, cultura y dedicación.</p>
+                <p>Desde tiempos prehispánicos, los pueblos indígenas descubrieron el proceso de fermentación y destilación del agave para crear esta bebida espirituosa. El mezcal ha sido parte integral de rituales, celebraciones y la vida cotidiana de las comunidades mexicanas. Se dice que cada región de México tiene su propio tipo de mezcal, elaborado con diferentes variedades de agave y métodos de producción únicos, lo que contribuye a la diversidad y riqueza de esta bebida.</p>
+                <p>En "Destilado Agave", nos inspiramos en esta rica historia para crear una marca que honra la autenticidad y la pasión detrás del mezcal. Nuestro proceso artesanal combina técnicas tradicionales con un toque moderno para ofrecerte una experiencia única. Trabajamos mano a mano con productores locales que han perfeccionado el arte del mezcal a lo largo de generaciones, asegurando que cada botella refleje el carácter y la esencia de su lugar de origen.</p>
+                <p>La selección meticulosa de los agaves es el primer paso en nuestro proceso. Utilizamos solo los agaves más maduros, cultivados en suelos ricos y cosechados a mano para asegurar la mejor calidad. Después de la cosecha, los agaves son cocidos en hornos tradicionales de piedra y tierra, lo que infunde al mezcal su sabor ahumado característico.</p>
+                <p>La molienda y fermentación se realizan de manera artesanal, utilizando métodos que han pasado de generación en generación. La destilación se lleva a cabo en alambiques de cobre, bajo la atenta supervisión de maestros mezcaleros que garantizan que cada lote mantenga los estándares más altos de calidad.</p>
+                <p>En cada botella de "Destilado Agave", encontrarás una labor de amor y dedicación. Nuestro compromiso es ofrecerte un mezcal que no solo es una bebida, sino una celebración de la cultura y el arte del mezcal. Estamos orgullosos de compartir contigo esta tradición y de invitarte a descubrir los sabores únicos y complejos que cada sorbo de nuestro mezcal puede ofrecer.</p>
+                <p>Gracias por ser parte de nuestra historia. ¡Salud!</p>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <img src="{{ asset('images/3Mezcales.jpeg') }}" alt="Historia del mezcal" class="img-fluid rounded">
+            </div>
+            <div class="col-md-4">
+                <img src="{{ asset('images/Botellitas.jpeg') }}" alt="Proceso de producción" class="img-fluid rounded">
+            </div>
+            <div class="col-md-4">
+                <img src="{{ asset('images/Mezcal con agaves.jpeg') }}" alt="Producto final" class="img-fluid rounded">
+            </div>
         </div>
     </main>
     <footer class="bg-dark text-white text-center py-3 mt-auto">
@@ -130,12 +146,47 @@
     }
 
     img.img-fluid {
-        max-width: 50%;
+        max-width: 100%;
         height: auto;
     }
 
     .btn-success {
         margin-top: 20px;
     }
+
+    .card {
+        border: none;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-title {
+        font-size: 1.25em;
+    }
+
+    .card-img-top {
+        width: 100%; 
+        height: 200px; /* Ajusta la altura según necesites */
+        object-fit: cover; /* Esto se asegura de que la imagen mantenga su relación de aspecto mientras llena el contenedor */
+    }
+
+    .card-body {
+        flex: 1;
+    }
+
+    .card-text {
+        flex: 1;
+        display: flex;
+        align-items: flex-end;
+    }
+
+    .card-footer {
+        background-color: #ffffff;
+    }
+
+    img.rounded {
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+
 </style>
 </html>

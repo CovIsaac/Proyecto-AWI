@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Destilado Agave - Bienvenidos</title>
+    <title>Destilado Agave - Sabores</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -50,11 +50,17 @@
     </header>
     <main class="container my-5 flex-grow-1">
         <div class="row">
-            <section class="col-md-6 offset-md-3 text-center">
-                <h2>Bienvenidos</h2>
-                <img src="{{ asset('images/Ferecha.jpeg') }}" alt="Imagen de mezcal" class="img-fluid my-4">
-                <p>Descubre el sabor auténtico y tradicional del mezcal de la más alta calidad. En "Destilado Agave", nos enorgullece ofrecerte una experiencia única que celebra la riqueza de nuestra herencia cultural. Cada botella es una obra de arte, destilada con pasión y dedicación.</p>
-            </section>
+            @foreach($mezcales as $mezcal)
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <img src="{{ asset('images/flavors/' . $mezcal->flavor . '.jpg') }}" class="card-img-top" alt="{{ $mezcal->flavor }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ $mezcal->name }}</h5>
+                            <p class="card-text">{{ $mezcal->description }}</p>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
         </div>
     </main>
     <footer class="bg-dark text-white text-center py-3 mt-auto">
@@ -64,78 +70,110 @@
 </body>
 <style>
     body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #f8f9fa;
-        color: #343a40;
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-    }
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    color: #343a40;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
 
-    header .container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-    header .text-start h1 {
-        font-size: 3em;
-    }
+header .text-start h1 {
+    font-size: 3em;
+}
 
-    header .text-start p {
-        font-size: 1.5em;
-        font-style: italic;
-        margin-top: 5px;
-    }
+header .text-start p {
+    font-size: 1.5em;
+    font-style: italic;
+    margin-top: 5px;
+}
 
-    nav ul.nav {
-        padding-left: 0;
-    }
+nav ul.nav {
+    padding-left: 0;
+}
 
-    nav ul.nav li.nav-item a.nav-link {
-        color: #ffffff;
-        font-weight: 400;
-    }
+nav ul.nav li.nav-item a.nav-link {
+    color: #ffffff;
+    font-weight: 400;
+}
 
-    nav ul.nav li.nav-item a.nav-link.active {
-        font-weight: bold;
-        border-bottom: 2px solid #000;
-    }
+nav ul.nav li.nav-item a.nav-link.active {
+    font-weight: bold;
+    border-bottom: 2px solid #000;
+}
 
-    main {
-        flex: 1;
-    }
+main {
+    flex: 1;
+}
 
-    section h2 {
-        font-size: 2em;
-        margin-bottom: 20px;
-        border-bottom: 2px solid #343a40;
-        padding-bottom: 10px;
-    }
+section h2 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #343a40;
+    padding-bottom: 10px;
+}
 
-    footer {
-        background-color: #343a40;
-        color: white;
-        text-align: center;
-        padding: 10px 0;
-    }
+footer {
+    background-color: #343a40;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+}
 
-    footer p {
-        margin: 0;
-    }
+footer p {
+    margin: 0;
+}
 
-    svg.me-3 {
-        width: 50px; /* Ajusta el tamaño del ícono según necesites */
-        height: auto;
-    }
+svg.me-3 {
+    width: 50px; /* Ajusta el tamaño del ícono según necesites */
+    height: auto;
+}
 
-    img.img-fluid {
-        max-width: 50%;
-        height: auto;
-    }
+img.img-fluid {
+    max-width: 100%;
+    height: auto;
+}
 
-    .btn-success {
-        margin-top: 20px;
-    }
+.btn-success {
+    margin-top: 20px;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+.card-title {
+    font-size: 1.25em;
+}
+
+.card-img-top {
+    width: 100%; 
+    height: 200px; /* Ajusta la altura según necesites */
+    object-fit: cover; /* Esto se asegura de que la imagen mantenga su relación de aspecto mientras llena el contenedor */
+}
+
+.card-body {
+    flex: 1;
+}
+
+.card-text {
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+}
+
+.card-footer {
+    background-color: #ffffff;
+}
+
 </style>
 </html>

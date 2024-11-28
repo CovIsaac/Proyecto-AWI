@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Destilado Agave - Bienvenidos</title>
+    <title>Pagar - Destilado Agave</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -20,122 +20,237 @@
                 </div>
             </div>
             <div>
-                @if (Route::has('login'))
-                    <div class="links">
-                        @auth
-                            <a href="{{ url('/dashboard') }}" class="btn btn-primary">Dashboard</a>
-                        @else
-                            <a href="{{ route('login') }}" class="btn btn-light">Iniciar sesión</a>
-                            @if (Route::has('register'))
-                                <a href="{{ route('register') }}" class="btn btn-secondary">Registrarse</a>
-                            @endif
-                        @endauth
-                    </div>
-                @endif
+                <button class="btn btn-light" id="menu-button">
+                    &#9776;
+                </button>
             </div>
         </div>
-        <nav class="mt-3">
-            <ul class="nav justify-content-center">
-                <li class="nav-item">
-                    <a class="nav-link @if(request()->is('/')) active @endif" href="{{ url('/') }}">Inicio</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link @if(request()->is('sabores')) active @endif" href="{{ url('/sabores') }}">Sabores</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link @if(request()->is('sobre-nosotros')) active @endif" href="{{ url('/sobre-nosotros') }}">Sobre Nosotros</a>
-                </li>
-            </ul>
-        </nav>
     </header>
     <main class="container my-5 flex-grow-1">
-        <div class="row">
-            <section class="col-md-6 offset-md-3 text-center">
-                <h2>Bienvenidos</h2>
-                <img src="{{ asset('images/Ferecha.jpeg') }}" alt="Imagen de mezcal" class="img-fluid my-4">
-                <p>Descubre el sabor auténtico y tradicional del mezcal de la más alta calidad. En "Destilado Agave", nos enorgullece ofrecerte una experiencia única que celebra la riqueza de nuestra herencia cultural. Cada botella es una obra de arte, destilada con pasión y dedicación.</p>
-            </section>
-        </div>
+        <h2>Proceder al Pago</h2>
+        <form action="{{ route('procesar-pago') }}" method="POST">
+            @csrf
+            <div class="mb-3">
+                <label for="nombre-tarjeta" class="form-label">Nombre en la tarjeta</label>
+                <input type="text" id="nombre-tarjeta" name="nombre_tarjeta" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="numero-tarjeta" class="form-label">Número de la tarjeta</label>
+                <input type="text" id="numero-tarjeta" name="numero_tarjeta" class="form-control" required maxlength="19" oninput="formatCardNumber(this)">
+            </div>
+            <div class="mb-3">
+                <label for="fecha-expiracion" class="form-label">Fecha de expiración</label>
+                <input type="text" id="fecha-expiracion" name="fecha_expiracion" class="form-control" placeholder="MM/AA" required maxlength="5" oninput="formatExpiryDate(this)">
+            </div>
+            <button type="submit" class="btn btn-success">Pagar</button>
+        </form>
     </main>
     <footer class="bg-dark text-white text-center py-3 mt-auto">
         <p>&copy; 2024 Destilado Agave. Todos los derechos reservados.</p>
     </footer>
+    
+    <!-- Barra lateral -->
+    <div id="sidebar" class="sidebar">
+        <button class="close-btn" id="close-btn">&times;</button>
+        @auth
+            <a href="{{ url('/profile') }}">Perfil</a>
+            <a href="{{ url('/carrito') }}">Carrito</a>
+            <a href="{{ route('logout') }}" class="logout-link"
+               onclick="event.preventDefault();
+                         document.getElementById('logout-form').submit();">
+                Cerrar sesión
+            </a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                @csrf
+            </form>
+        @endauth
+    </div>
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('menu-button').addEventListener('click', function() {
+            document.getElementById('sidebar').style.width = '250px';
+        });
+
+        document.getElementById('close-btn').addEventListener('click', function() {
+            document.getElementById('sidebar').style.width = '0';
+        });
+
+        function increaseQuantity(inputId, itemId) {
+            const quantityInput = document.getElementById(inputId);
+            let quantity = parseInt(quantityInput.value);
+            if (quantity < 10) {
+                quantityInput.value = quantity + 1;
+                updateCartTotal(itemId);
+            }
+        }
+
+        function decreaseQuantity(inputId, itemId) {
+            const quantityInput = document.getElementById(inputId);
+            let quantity = parseInt(quantityInput.value);
+            if (quantity > 1) {
+                quantityInput.value = quantity - 1;
+                updateCartTotal(itemId);
+            }
+        }
+
+        function updateCartTotal(itemId) {
+            const quantityInput = document.getElementById('quantity-' + itemId);
+            const totalElement = document.getElementById('total-' + itemId);
+            const grandTotalElement = document.getElementById('grand-total');
+
+            const pricePerItem = 220;
+            const quantity = parseInt(quantityInput.value);
+            const total = quantity * pricePerItem;
+
+            totalElement.textContent = `$${total} MXN`;
+
+            // Update grand total
+            let grandTotal = 0;
+            document.querySelectorAll('[id^="total-"]').forEach(element => {
+                grandTotal += parseInt(element.textContent.replace(/\D/g, ''));
+            });
+
+            grandTotalElement.textContent = grandTotal;
+        }
+
+        function formatCardNumber(input) {
+            const value = input.value.replace(/\D/g, '').substring(0, 16); // Eliminar caracteres no numéricos y limitar a 16 dígitos
+            const formattedValue = value.match(/.{1,4}/g)?.join(' ') || value; // Agrupar en bloques de 4
+            input.value = formattedValue;
+        }
+
+        function formatExpiryDate(input) {
+            const value = input.value.replace(/\D/g, '').substring(0, 4); // Eliminar caracteres no numéricos y limitar a 4 dígitos
+            const formattedValue = value.length > 2 ? value.substring(0, 2) + '/' + value.substring(2, 4) : value; // Formatear como MM/AA
+            input.value = formattedValue;
+        }
+    </script>
 </body>
 <style>
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #f8f9fa;
-        color: #343a40;
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-    }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #343a40;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
 
-    header .container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-    header .text-start h1 {
-        font-size: 3em;
-    }
+        header .text-start h1 {
+            font-size: 3em;
+        }
 
-    header .text-start p {
-        font-size: 1.5em;
-        font-style: italic;
-        margin-top: 5px;
-    }
+        header .text-start p {
+            font-size: 1.5em;
+            font-style: italic;
+            margin-top: 5px;
+        }
 
-    nav ul.nav {
-        padding-left: 0;
-    }
+        nav ul.nav {
+            padding-left: 0;
+        }
 
-    nav ul.nav li.nav-item a.nav-link {
-        color: #ffffff;
-        font-weight: 400;
-    }
+        nav ul.nav li.nav-item a.nav-link {
+            color: #ffffff;
+            font-weight: 400;
+        }
 
-    nav ul.nav li.nav-item a.nav-link.active {
-        font-weight: bold;
-        border-bottom: 2px solid #000;
-    }
+        nav ul.nav li.nav-item a.nav-link.active {
+            font-weight: bold;
+            border-bottom: 2px solid #000;
+        }
 
-    main {
-        flex: 1;
-    }
+        main {
+            flex: 1;
+        }
 
-    section h2 {
-        font-size: 2em;
-        margin-bottom: 20px;
-        border-bottom: 2px solid #343a40;
-        padding-bottom: 10px;
-    }
+        section h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #343a40;
+            padding-bottom: 10px;
+        }
 
-    footer {
-        background-color: #343a40;
-        color: white;
-        text-align: center;
-        padding: 10px 0;
-    }
+        footer {
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+        }
 
-    footer p {
-        margin: 0;
-    }
+        footer p {
+            margin: 0;
+        }
 
-    svg.me-3 {
-        width: 50px; /* Ajusta el tamaño del ícono según necesites */
-        height: auto;
-    }
+        svg.me-3 {
+            width: 50px; /* Ajusta el tamaño del ícono según necesites */
+            height: auto;
+        }
 
-    img.img-fluid {
-        max-width: 50%;
-        height: auto;
-    }
 
-    .btn-success {
-        margin-top: 20px;
-    }
-</style>
+        .btn-success {
+            margin-top: 20px;
+        }
+
+
+        /* Estilos para la barra lateral */
+        .sidebar {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            right: 0;
+            background-color: #343a40;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .sidebar a {
+            padding: 10px 15px;
+            text-decoration: none;
+            font-size: 25px;
+            color: #ffffff;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .sidebar a:hover {
+            color: #f1f1f1;
+            background-color: rgba(255, 255, 255, 0.1); /* Añade un fondo al hacer hover */
+        }
+
+        .sidebar .close-btn {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            font-size: 36px;
+            margin-left: 50px;
+        }
+
+        .logout-link {
+            font-size: 20px;
+            margin-top: auto;
+        }
+
+        /* Estilos para el botón de menú */
+        #menu-button {
+            font-size: 30px;
+            background-color: transparent;
+            border: none;
+            color: #ffffff;
+            cursor: pointer;
+        }
+    </style>
 </html>
